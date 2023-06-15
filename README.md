@@ -1,0 +1,1 @@
+# omnitalk.react-native.sdk

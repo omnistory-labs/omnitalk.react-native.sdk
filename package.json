@@ -18,7 +18,7 @@
     "@react-navigation/stack": "^6.3.16",
     "@types/lodash": "^4.14.195",
     "lodash": "^4.17.21",
-    "omnitalk-rn-test2-sdk": "^1.1.52",
+    "omnitalk-rn-test2-sdk": "^1.1.53",
     "react-native-permissions": "^3.8.0",
     "react-native-safe-area-context": "^4.5.3",
     "react-native-screens": "^3.21.0",

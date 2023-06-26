@@ -13,7 +13,10 @@ import {OmnitalkContext} from '../utils/OmnitalkContext';
 //   CALL_TYPE,
 //   VIDEOROOM_TYPE,
 // } from 'omnitalk-rn-test2-sdk/types/public-types/common';
-
+import {
+  CALL_TYPE,
+  VIDEOROOM_TYPE,
+} from 'omnitalk-rn-test2-sdk/dist/public-types/common';
 interface CallList {
   // Define your call list item type here
 }
@@ -101,11 +104,11 @@ function AudioCall({navigation}: any) {
                 console.log('callee in offercall is... ', callee);
               }
               try {
-                // const offerResult = await omnitalk!.offerCall(
-                //   CALL_TYPE.AUDIO_CALL,
-                //   callee,
-                // );
-                // console.log('offerResult is ...', offerResult);
+                const offerResult = await omnitalk!.offerCall(
+                  CALL_TYPE.AUDIO_CALL,
+                  callee,
+                );
+                console.log('offerResult is ...', offerResult);
               } catch (err) {
                 console.error(err);
               }
@@ -123,11 +126,11 @@ function AudioCall({navigation}: any) {
           onPress={async () => {
             console.log('---------- rrrrrr 2222222-------');
             console.log(roomId, publishIdx);
-            // await omnitalk!.answerCall(
-            //   roomId,
-            //   VIDEOROOM_TYPE.AUDIO_CALL,
-            //   Number(publishIdx),
-            // );
+            await omnitalk!.answerCall(
+              roomId,
+              VIDEOROOM_TYPE.AUDIO_CALL,
+              Number(publishIdx),
+            );
           }}>
           <Text style={{color: '#fff', fontSize: 20}}>Answer Call</Text>
         </TouchableOpacity>

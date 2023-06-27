@@ -31,8 +31,8 @@ import {OmnitalkContext} from './utils/OmnitalkContext';
 import {NavigationContainer} from '@react-navigation/native';
 import Home from './screen/Home';
 import AudioCall from './screen/AudioCall';
-// import VideoCall from './screen/VideoCall';
-// import VideoConference from './screen/VideoConference';
+import VideoCall from './screen/VideoCall';
+import VideoConference from './screen/VideoConference';
 const Stack = createNativeStackNavigator();
 
 const App: React.FC = () => {
@@ -52,7 +52,7 @@ const App: React.FC = () => {
             component={AudioCall}
             options={{headerShown: false}}
           />
-          {/* <Stack.Screen
+          <Stack.Screen
             name="VideoCall"
             component={VideoCall}
             options={{headerShown: false}}
@@ -61,7 +61,7 @@ const App: React.FC = () => {
             name="VideoConference"
             component={VideoConference}
             options={{headerShown: false}}
-          /> */}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </OmnitalkContext.Provider>

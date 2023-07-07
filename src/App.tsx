@@ -26,17 +26,21 @@
 // }
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Omnitalk} from 'omnitalk-rn-test2-sdk';
+import Omnitalk from 'omnitalk-rn-ellie-sdk';
 import {OmnitalkContext} from './utils/OmnitalkContext';
 import {NavigationContainer} from '@react-navigation/native';
 import Home from './screen/Home';
 import AudioCall from './screen/AudioCall';
 import VideoCall from './screen/VideoCall';
 import VideoConference from './screen/VideoConference';
+import FunctionTest from './screen/FunctionTest';
+import ChattingRoom from './screen/ChattingRoom';
+import AudioConference from './screen/AudioConference';
 const Stack = createNativeStackNavigator();
 
 const App: React.FC = () => {
-  const omnitalk = new Omnitalk('FM51-HITX-IBPG-QN7H', 'FWIWblAEXpbIims');
+  Omnitalk.init('FM51-HITX-IBPG-QN7H', 'FWIWblAEXpbIims');
+  const omnitalk = Omnitalk.getInstance();
 
   return (
     <OmnitalkContext.Provider value={omnitalk}>
@@ -58,8 +62,23 @@ const App: React.FC = () => {
             options={{headerShown: false}}
           />
           <Stack.Screen
+            name="AudioConference"
+            component={AudioConference}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
             name="VideoConference"
             component={VideoConference}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ChattingRoom"
+            component={ChattingRoom}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="FunctionTest"
+            component={FunctionTest}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from 'react';
-// import { useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,28 +6,27 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {RTCView, RTCViewProps} from 'react-native-webrtc';
-import {OmnitalkContext} from '../utils/OmnitalkContext';
+import {RTCView} from 'react-native-webrtc';
 import {debounce} from 'lodash';
-import {
-  CALL_TYPE,
-  VIDEOROOM_TYPE,
-} from 'omnitalk-rn-test2-sdk/dist/public-types/common';
+import {CALL_TYPE} from 'omnitalk-rn-ellie-sdk';
+import {TRACK} from 'omnitalk-rn-ellie-sdk/dist/types/enum';
+import {OmnitalkContext} from '../utils/OmnitalkContext';
 
 function VideoCall({navigation}: any) {
+  const omnitalk = useContext(OmnitalkContext);
   const [session, setSession] = useState('');
-  const [roomId, setRoomId] = useState('');
-  const [publishIdx, setPublishIdx] = useState('');
 
-  const [localStreamRef, setLocalStreamRef] = useState<RTCViewProps>();
-  const [remoteStreamRef, setRemoteStreamRef] = useState<RTCViewProps>();
+  const [localStreamRef, setLocalStreamRef] = useState<typeof RTCView>({
+    streamURL: '',
+  });
+  const [remoteStreamRef, setRemoteStreamRef] = useState<typeof RTCView>({
+    streamURL: '',
+  });
   let [audioToggle, setAudioToggle] = useState(true);
   let [remoteOn, setRemoteOn] = useState(false);
   let [localOn, setLocalOn] = useState(false);
+  const [callList, setCallList] = useState<{}>([]);
 
-  const omnitalk = useContext(OmnitalkContext);
-
-  // const [callList, setCallList] = useState([]);
   const [callee, setCallee] = useState('');
   const [caller, setCaller] = useState('');
 
@@ -37,27 +35,29 @@ function VideoCall({navigation}: any) {
   }, 300);
 
   useEffect(() => {
-    omnitalk?.on('event', async msg => {
+    const eventListener = async (msg: any) => {
       console.log('Event Message : ', msg);
       switch (msg.cmd) {
         case 'RINGING_EVENT':
-          setRoomId(msg.room_id);
-          setPublishIdx(msg.publish_idx);
+          setCaller(msg.caller);
+          setCallee(msg.callee);
           break;
         case 'CONNECTED_EVENT':
-          setRemoteOn(true);
+          // setRemoteOn(true);
+          setLocalOn(true);
           break;
         case 'BROADCASTING_EVENT':
-          setRemoteOn(true);
-          setCaller(msg.caller);
+          if (remoteStreamRef?.streamURL.length > 1) {
+            setRemoteOn(true);
+          }
           break;
       }
-    });
-  }, [omnitalk]);
+    };
 
-  useEffect(() => {
-    setLocalStreamRef({streamURL: ''});
-    setRemoteStreamRef({streamURL: ''});
+    omnitalk?.on('event', eventListener);
+    return () => {
+      omnitalk?.off('event', eventListener);
+    };
   }, []);
 
   return (
@@ -72,13 +72,30 @@ function VideoCall({navigation}: any) {
           onPress={async () => {
             await omnitalk!
               .createSession()
-              .then(session => setSession(session.session));
+              .then((session: any) => setSession(session.session));
             const device = await omnitalk!.getDeviceList();
 
             console.log(`devices : ${JSON.stringify(device)}`);
           }}>
           <Text style={{color: '#fff', fontSize: 20}}>Create Session</Text>
         </TouchableOpacity>
+        <View>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={async () => {
+              await omnitalk?.sessionList().then((list: any) => {
+                setCallList(list.list);
+              });
+              console.log(`audio call list : ${JSON.stringify(callList)}`);
+            }}>
+            <Text style={{color: '#fff', fontSize: 20}}>Get Session List</Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Text style={styles.textContainer}>
+            {`${JSON.stringify(callList)}`}
+          </Text>
+        </View>
         <View style={styles.inputForm}>
           <TextInput
             style={styles.input}
@@ -93,23 +110,16 @@ function VideoCall({navigation}: any) {
               console.log('callee in offercall is... ', callee);
               console.log(typeof localStreamRef);
 
-              await omnitalk!
-                .offerCall(
-                  CALL_TYPE.VIDEO_CALL,
-                  callee,
-                  localStreamRef,
-                  remoteStreamRef,
-                  false,
-                )
-                .then(() => {
-                  setLocalOn(true);
-                  setRemoteOn(true);
-                });
+              await omnitalk!.offerCall(
+                CALL_TYPE.VIDEO_CALL,
+                callee,
+                localStreamRef,
+                remoteStreamRef,
+                false,
+              );
+
               setLocalStreamRef(localStreamRef);
               setRemoteStreamRef(remoteStreamRef);
-              console.log('.......uuuuuuuuu........ ');
-              console.log(localStreamRef);
-              console.log(remoteStreamRef);
               setLocalOn(true);
 
               console.log(localOn, remoteOn);
@@ -125,19 +135,16 @@ function VideoCall({navigation}: any) {
         <TouchableOpacity
           style={styles.btn}
           onPress={async () => {
-            localStreamRef!.streamURL = '';
-            remoteStreamRef!.streamURL = '';
             await omnitalk!.answerCall(
-              roomId,
-              VIDEOROOM_TYPE.VIDEO_CALL,
-              Number(publishIdx),
+              CALL_TYPE.VIDEO_CALL,
+              caller,
               localStreamRef,
               remoteStreamRef,
             );
             setLocalStreamRef(localStreamRef);
             setRemoteStreamRef(remoteStreamRef);
             setLocalOn(true);
-            setRemoteOn(true);
+            // setRemoteOn(true);
           }}>
           <Text style={{color: '#fff', fontSize: 20}}>Answer Call</Text>
         </TouchableOpacity>
@@ -145,17 +152,27 @@ function VideoCall({navigation}: any) {
         <TouchableOpacity
           style={styles.btn}
           onPress={async () => {
-            await omnitalk!.setAudioMute(audioToggle);
+            await omnitalk!.setMute(TRACK.VIDEO);
             setAudioToggle(!audioToggle);
           }}>
-          <Text style={{color: '#fff', fontSize: 20}}>AudioMute</Text>
+          <Text style={{color: '#fff', fontSize: 20}}>VideoMute</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={async () => {
+            await omnitalk!.setUnmute(TRACK.VIDEO);
+            setAudioToggle(!audioToggle);
+          }}>
+          <Text style={{color: '#fff', fontSize: 20}}>VideoUnmute</Text>
         </TouchableOpacity>
 
-        <View>
-          <Text style={styles.textContainer}>
-            {`Audio mute is ${!audioToggle}`}
-          </Text>
-        </View>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={async () => {
+            await omnitalk!.switchVideoDevice();
+          }}>
+          <Text style={{color: '#fff', fontSize: 20}}>SwitchVideoDevice</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.btn}
@@ -175,7 +192,7 @@ function VideoCall({navigation}: any) {
                 height: 100,
                 backgroundColor: 'gray',
               }}
-              streamURL={localStreamRef!.streamURL}
+              streamURL={localStreamRef?.streamURL}
               objectFit={'cover'}
             />
           )}
@@ -187,7 +204,7 @@ function VideoCall({navigation}: any) {
                 height: 100,
                 backgroundColor: 'lightgray',
               }}
-              streamURL={remoteStreamRef!.streamURL}
+              streamURL={remoteStreamRef?.streamURL}
               objectFit={'cover'}
             />
           )}

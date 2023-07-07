@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {RTCView, RTCViewProps} from 'react-native-webrtc';
+import {RTCView} from 'react-native-webrtc';
 import {OmnitalkContext} from '../utils/OmnitalkContext';
-import {VIDEOROOM_TYPE} from 'omnitalk-rn-test2-sdk/dist/public-types/common';
+import {DEFAULT_ROOM_TYPE} from 'omnitalk-rn-ellie-sdk';
+import {TRACK} from 'omnitalk-rn-ellie-sdk/dist/types/enum';
 
 function VideoConference({navigation}: any) {
+  const omnitalk = useContext(OmnitalkContext);
   const [meetingRoom, setMeetingRoom] = useState(false);
   const [roomName, setRoomName] = useState('');
   const [session, setSession] = useState('');
@@ -21,51 +23,52 @@ function VideoConference({navigation}: any) {
   const [joinBtn, setJoinBtn] = useState(false);
   //   const localStreamRef = useRef<RTCViewProps>();
   //   const streamRef = useRef<RTCViewProps[]>([]);
-  const [localStreamRef, setLocalStreamRef] = useState<RTCViewProps>();
-  const remoteStreamRef1: RTCViewProps = {streamURL: ''};
-  const remoteStreamRef2: RTCViewProps = {streamURL: ''};
-  const remoteStreamRef3: RTCViewProps = {streamURL: ''};
-  const [remoteStreamRef, setRemoteStreamRef] = useState<RTCViewProps[]>([
+  const [localStreamRef, setLocalStreamRef] = useState<typeof RTCView>({
+    streamURL: '',
+  });
+  const remoteStreamRef1: typeof RTCView = {streamURL: ''};
+  const remoteStreamRef2: typeof RTCView = {streamURL: ''};
+  const remoteStreamRef3: typeof RTCView = {streamURL: ''};
+  const [remoteStreamRef, setRemoteStreamRef] = useState<(typeof RTCView)[]>([
     remoteStreamRef1,
     remoteStreamRef2,
     remoteStreamRef3,
   ]);
 
   let count = 0;
-  const omnitalk = useContext(OmnitalkContext);
+
   const countUp = () => {
     count++;
   };
 
-  const [subResult, setSubResult] = useState(0);
   let [localOn, setLocalOn] = useState(false);
   let [remoteOn, setRemoteOn] = useState(false);
 
-  function _onCallback() {
-    omnitalk?.on('event', async e => {
-      switch (e.cmd) {
-        case 'SESSION_EVENT':
-          // console.log("SESSION_EVENT sesson id is...", e.session);
+  useEffect(() => {
+    const eventListener = async (msg: any) => {
+      console.log('Event Message : ', msg);
+      switch (msg.cmd) {
+        case 'CONNECTED_EVENT':
           break;
         case 'BROADCASTING_EVENT':
-          await omnitalk!
-            .subscribe(e.publish_idx, remoteStreamRef[count])
-            .then(result => {
-              setSubResult(result.publish_idx);
-              console.log(subResult);
+          console.log('remote count is ...', count);
+          await omnitalk
+            ?.subscribe(msg.session, remoteStreamRef[count])
+            .then(() => {
               countUp();
-              setRemoteOn(true);
+              if (remoteStreamRef[count].streamURL.length > 1) {
+                setRemoteOn(true);
+              }
             });
 
           break;
       }
-    });
-  }
-  useEffect(() => {
-    _onCallback();
-  });
-  useEffect(() => {
-    setLocalStreamRef({streamURL: ''});
+    };
+
+    omnitalk?.on('event', eventListener);
+    return () => {
+      omnitalk?.off('event', eventListener);
+    };
   }, []);
 
   return (
@@ -80,7 +83,7 @@ function VideoConference({navigation}: any) {
             onPress={async () => {
               await omnitalk!
                 .createSession()
-                .then(session => setSession(session.session));
+                .then((session: any) => setSession(session.session));
               const device = await omnitalk!.getDeviceList();
               console.log(`createsession : ${session}`);
               console.log(`devices : ${JSON.stringify(device)}`);
@@ -98,10 +101,9 @@ function VideoConference({navigation}: any) {
             <TouchableOpacity
               style={styles.btn}
               onPress={async () => {
-                const room = await omnitalk!
-                  .createRoom(VIDEOROOM_TYPE.VIDEO_ROOM, roomName)
-                  .then(res => {
-                    console.log('create room result is..', JSON.stringify(res));
+                const room = await omnitalk
+                  ?.createRoom(DEFAULT_ROOM_TYPE.VIDEO_ROOM, roomName)
+                  .then((res: any) => {
                     setRoomId(res.room_id);
                     setJoinBtn(true);
                   });
@@ -138,109 +140,102 @@ function VideoConference({navigation}: any) {
           </View>
         </View>
       ) : (
-        <View style={styles.roomContainer}>
-          <View style={{alignItems: 'center'}}>
-            <TouchableOpacity
-              style={styles.btn}
-              onPress={async () => {
-                // leave(sessionIdRef.current, roomId);
-                console.log(`session1 : ${session}`);
-                await omnitalk!.leave(session);
+        <View style={styles.container}>
+          <View style={styles.roomContainer}>
+            <View style={{alignItems: 'center'}}>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={async () => {
+                  // leave(sessionIdRef.current, roomId);
+                  console.log(`session1 : ${session}`);
+                  await omnitalk!.leave(session);
 
-                navigation.navigate('Home');
-              }}>
-              <Text>나가기</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.btn}
-              onPress={async () => {
-                await omnitalk!.publish(localStreamRef as RTCViewProps);
-                console.log('------ ppppppppppppp--------');
-                // console.log(localStreamRef);
-                // await omnitalk!.testPublish(localStreamRef as RTCViewProps);
-                setLocalStreamRef(localStreamRef);
-                setLocalOn(true);
+                  navigation.navigate('Home');
+                }}>
+                <Text>나가기</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={async () => {
+                  await omnitalk?.publish(localStreamRef as typeof RTCView);
+                  setLocalStreamRef(localStreamRef);
+                  setLocalOn(true);
+                }}>
+                <Text>Publish</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={async () => {
+                  let partilist = [];
+                  await omnitalk
+                    ?.partiList(roomId)
+                    .then(res => (partilist = res.list));
 
-                console.log('------ ppppppppppppp--------');
-                console.log(localStreamRef!.streamURL);
-              }}>
-              <Text>Publish</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.btn}
-              onPress={async () => {
-                const partiResult = await omnitalk!.partiList(roomId);
-                const pubIdxList = partiResult.parti_list.map(
-                  parti => parti.publish_idx,
-                );
-                for (let i = 0; i < pubIdxList.length; i++) {
-                  await omnitalk!.subscribe(
-                    pubIdxList[i],
-                    remoteStreamRef[count],
+                  console.log(partilist);
+                  const pubIdxList = (partilist as any).list.map(
+                    (parti: any) => parti.session,
                   );
-                  setRemoteStreamRef([...remoteStreamRef]);
-                  countUp();
-                }
-              }}>
-              <Text>PartiList</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.btn}
-              onPress={async () => {
-                await omnitalk!.setVideoMute(toggle);
-                setToggle(!toggle);
-              }}>
-              <Text>VideoMute</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.btn}
-              onPress={async () => {
-                await omnitalk!.setAudioMute(audioToggle);
-                setAudioToggle(!audioToggle);
-              }}>
-              <Text>AudioMute</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.btn}
-              onPress={async () => {
-                // await omnitalk.setVideoDevice();
-                // await omnitalk.setResolution("FHD");
-                // await omnitalk!.setLocalVolume(7);
-                // console.log(
-                //   `subResult["pub_session"] : ${subResult.pub_session}`,
-                // );
-                // await omnitalk!.setRemoteVolume(subResult.pub_session, 0.5);
-              }}>
-              {/* <Text>Switch Camera</Text> */}
-              <Text>set volume</Text>
-            </TouchableOpacity>
-            <View style={{flexDirection: 'column', alignItems: 'center'}}>
-              <View style={{flexDirection: 'row'}}>
-                {localOn && (
-                  <RTCView
-                    style={{
-                      width: '30%',
-                      height: 100,
-                      backgroundColor: 'gray',
-                    }}
-                    streamURL={localStreamRef!.streamURL}
-                    objectFit={'cover'}
-                  />
-                )}
-                {remoteStreamRef.map(
-                  (item, index) =>
-                    remoteOn && (
-                      <RTCView
-                        key={index}
-                        streamURL={item.streamURL}
-                        style={{
-                          width: '20%',
-                          height: '100%',
-                        }}
-                        objectFit={'cover'}
-                      />
-                    ),
-                )}
+                  console.log(pubIdxList);
+                  for (let i = 0; i < pubIdxList.length; i++) {
+                    await omnitalk!.subscribe(
+                      pubIdxList[i],
+                      remoteStreamRef[count],
+                    );
+                    setRemoteStreamRef([...remoteStreamRef]);
+                    countUp();
+                  }
+                }}>
+                <Text>PartiList & Subscribe</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={async () => {
+                  await omnitalk?.setMute(TRACK.VIDEO);
+                }}>
+                <Text>VideoMute</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={async () => {
+                  await omnitalk?.setUnmute(TRACK.VIDEO);
+                }}>
+                <Text>VideoUnmute</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={async () => {
+                  await omnitalk?.switchVideoDevice();
+                }}>
+                <Text>Switch Camera</Text>
+              </TouchableOpacity>
+              <View style={{flexDirection: 'column', alignItems: 'center'}}>
+                <View style={{flexDirection: 'row'}}>
+                  {localOn && (
+                    <RTCView
+                      style={{
+                        width: '30%',
+                        height: 100,
+                        backgroundColor: 'gray',
+                      }}
+                      streamURL={localStreamRef?.streamURL}
+                      objectFit={'cover'}
+                    />
+                  )}
+                  {remoteStreamRef.map(
+                    (item, index) =>
+                      remoteOn && (
+                        <RTCView
+                          key={index}
+                          streamURL={item.streamURL}
+                          style={{
+                            width: '20%',
+                            height: '100%',
+                          }}
+                          objectFit={'cover'}
+                        />
+                      ),
+                  )}
+                </View>
               </View>
             </View>
           </View>
@@ -256,6 +251,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    margin: 40,
   },
   input: {
     width: 300,
@@ -268,7 +264,7 @@ const styles = StyleSheet.create({
   btn: {
     width: 300,
     height: 40,
-    marginBottom: 10,
+    marginBottom: 30,
     justifyContent: 'center',
     alignItems: 'center',
     fontSize: 22,

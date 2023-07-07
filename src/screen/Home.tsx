@@ -19,6 +19,8 @@ interface RootStackParamList extends ParamListBase {
   VideoConference: undefined;
   VideoCall: undefined;
   AudioCall: undefined;
+  FunctionTest: undefined;
+  ChattingRoom: undefined;
 }
 
 const Home: React.FC<HomeProps> = ({navigation}) => {
@@ -29,6 +31,11 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.startBtn}
+        onPress={() => handleNavigation('AudioConference')}>
+        <Text style={styles.title}>AudioConference</Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.startBtn}
         onPress={() => handleNavigation('VideoConference')}>
@@ -44,6 +51,16 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
         onPress={() => handleNavigation('VideoCall')}>
         <Text style={styles.title}>VideoCall</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.startBtn}
+        onPress={() => handleNavigation('ChattingRoom')}>
+        <Text style={styles.title}>ChattingRoom</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.funcBtn}
+        onPress={() => handleNavigation('FunctionTest')}>
+        <Text style={styles.title}>Function Test</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -51,6 +68,7 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
 interface Styles {
   container: ViewStyle;
   startBtn: ViewStyle;
+  funcBtn: ViewStyle;
   title: TextStyle;
 }
 
@@ -62,13 +80,28 @@ const styles = StyleSheet.create<Styles>({
     paddingHorizontal: 15,
   },
   startBtn: {
-    alignItems: 'center',
-    backgroundColor: 'tomato',
-    padding: 20,
+    width: 300,
+    height: 50,
     marginBottom: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 22,
+    backgroundColor: 'tomato',
+  },
+  funcBtn: {
+    width: 300,
+    height: 50,
+    marginBottom: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 22,
+
+    borderRadius: 30,
+    borderCurve: 'circular',
+    backgroundColor: 'purple',
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: '500',
     color: '#fff',
   },

@@ -11,19 +11,20 @@
     "postinstall": "react-native setup-ios-permissions && pod-install"
   },
   "dependencies": {
-    "react": "18.2.0",
-    "react-native": "0.72.0",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "@react-navigation/stack": "^6.3.16",
     "@types/lodash": "^4.14.195",
+    "events": "^3.3.0",
     "lodash": "^4.17.21",
-    "omnitalk-rn-ellie-sdk": "1.0.3",
+    "omnitalk-rn-sdk": "2.0.1",
+    "pod-install": "0.1.38",
+    "react": "18.2.0",
+    "react-native": "0.72.0",
     "react-native-permissions": "^3.8.0",
     "react-native-safe-area-context": "^4.5.3",
     "react-native-screens": "^3.21.0",
-    "react-native-webrtc": "^111.0.1",
-    "pod-install": "0.1.38"
+    "react-native-webrtc": "^111.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -34,6 +35,7 @@
     "@tsconfig/react-native": "^3.0.0",
     "@types/metro-config": "^0.76.3",
     "@types/react": "^18.0.24",
+    "@types/react-native-webrtc": "^1.75.5",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.2.1",
     "eslint": "^8.19.0",
@@ -41,8 +43,7 @@
     "metro-react-native-babel-preset": "0.76.5",
     "prettier": "^2.4.1",
     "react-test-renderer": "18.2.0",
-    "typescript": "4.8.4",
-    "@types/react-native-webrtc": "^1.75.5"
+    "typescript": "4.8.4"
   },
   "engines": {
     "node": ">=16"

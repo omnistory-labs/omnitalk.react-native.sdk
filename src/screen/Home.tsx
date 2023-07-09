@@ -31,7 +31,7 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.startBtn}
         onPress={() => handleNavigation('AudioConference')}>
         <Text style={styles.title}>AudioConference</Text>
@@ -40,7 +40,7 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
         style={styles.startBtn}
         onPress={() => handleNavigation('VideoConference')}>
         <Text style={styles.title}>VideoConference</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity
         style={styles.startBtn}
         onPress={() => handleNavigation('AudioCall')}>

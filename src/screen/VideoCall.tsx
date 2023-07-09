@@ -8,14 +8,13 @@ import {
 } from 'react-native';
 import {RTCView} from 'react-native-webrtc';
 import {debounce} from 'lodash';
-import {CALL_TYPE} from 'omnitalk-rn-ellie-sdk';
-import {TRACK} from 'omnitalk-rn-ellie-sdk/dist/types/enum';
+import {CALL_TYPE} from 'omnitalk-rn-sdk';
+import {TRACK} from 'omnitalk-rn-sdk/dist/types/enums';
 import {OmnitalkContext} from '../utils/OmnitalkContext';
 
 function VideoCall({navigation}: any) {
   const omnitalk = useContext(OmnitalkContext);
   const [session, setSession] = useState('');
-
   const [localStreamRef, setLocalStreamRef] = useState<typeof RTCView>({
     streamURL: '',
   });
@@ -26,7 +25,6 @@ function VideoCall({navigation}: any) {
   let [remoteOn, setRemoteOn] = useState(false);
   let [localOn, setLocalOn] = useState(false);
   const [callList, setCallList] = useState<{}>([]);
-
   const [callee, setCallee] = useState('');
   const [caller, setCaller] = useState('');
 
@@ -43,7 +41,6 @@ function VideoCall({navigation}: any) {
           setCallee(msg.callee);
           break;
         case 'CONNECTED_EVENT':
-          // setRemoteOn(true);
           setLocalOn(true);
           break;
         case 'BROADCASTING_EVENT':
@@ -113,6 +110,7 @@ function VideoCall({navigation}: any) {
               await omnitalk!.offerCall(
                 CALL_TYPE.VIDEO_CALL,
                 callee,
+
                 localStreamRef,
                 remoteStreamRef,
                 false,

@@ -10,13 +10,12 @@ import {
 
 import {OmnitalkContext} from '../utils/OmnitalkContext';
 import {debounce} from 'lodash';
-import {DEFAULT_ROOM_TYPE, MESSAGE_ACTION} from 'omnitalk-rn-ellie-sdk';
+import {DEFAULT_ROOM_TYPE, MESSAGE_ACTION} from 'omnitalk-rn-sdk';
 
 function ChattingRoom({navigation}: any) {
   const omnitalk = useContext(OmnitalkContext);
   const [session, setSession] = useState('');
   const [roomId, setRoomId] = useState('');
-
   const [text, setText] = useState('');
   const [whisper, setWhisper] = useState('');
   const [target, setTarget] = useState('');
@@ -76,9 +75,13 @@ function ChattingRoom({navigation}: any) {
                 await omnitalk!
                   .createSession()
                   .then((session: any) => setSession(session.session));
-                const device = await omnitalk!.getDeviceList();
-
-                console.log(`devices : ${JSON.stringify(device)}`);
+                await omnitalk!
+                  .createRoom(DEFAULT_ROOM_TYPE.VIDEO_ROOM)
+                  .then((res: any) => {
+                    setRoomId(res.room_id);
+                    omnitalk!.joinRoom(res.room_id);
+                  })
+                  .then(() => setChatOff(false));
               }}>
               <Text style={{color: '#fff', fontSize: 20}}>Create Session</Text>
             </TouchableOpacity>

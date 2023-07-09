@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import {RTCView} from 'react-native-webrtc';
 import {OmnitalkContext} from '../utils/OmnitalkContext';
-import {DEFAULT_ROOM_TYPE} from 'omnitalk-rn-ellie-sdk';
-import {TRACK} from 'omnitalk-rn-ellie-sdk/dist/types/enum';
+import {DEFAULT_ROOM_TYPE} from 'omnitalk-rn-sdk';
+import {TRACK} from 'omnitalk-rn-sdk/dist/types/enums';
 
 function VideoConference({navigation}: any) {
   const omnitalk = useContext(OmnitalkContext);

@@ -64,3 +64,8 @@ yarn-error.log
 
 # testing
 /coverage
+
+
+# demo
+/src/screen/AudioConference.tsx
+/src/screen.VideoConference.tsx

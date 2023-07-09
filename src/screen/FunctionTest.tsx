@@ -4,8 +4,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {RTCView} from 'react-native-webrtc';
 import {OmnitalkContext} from '../utils/OmnitalkContext';
 import {debounce} from 'lodash';
-import {CALL_TYPE} from 'omnitalk-rn-ellie-sdk';
-import {DEFAULT_ROOM_TYPE} from 'omnitalk-rn-ellie-sdk';
+import {CALL_TYPE} from 'omnitalk-rn-sdk';
+import {DEFAULT_ROOM_TYPE} from 'omnitalk-rn-sdk';
 
 function FunctionTest({navigation}: any) {
   const omnitalk = useContext(OmnitalkContext);
@@ -13,7 +13,7 @@ function FunctionTest({navigation}: any) {
   const [roomId, setRoomId] = useState('');
   const [publisherSession, setpublisherSession] = useState('');
   const [partiList, setPartiList] = useState([]);
-  const [roomList, setRoomList] = useState([]);
+  const [roomList, setRoomList] = useState<{}>([]);
 
   const [localStreamRef, setLocalStreamRef] = useState<typeof RTCView>();
   const [remoteStreamRef, setRemoteStreamRef] = useState<typeof RTCView>();

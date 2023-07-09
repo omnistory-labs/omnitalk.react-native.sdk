@@ -8,16 +8,16 @@ import {
 } from 'react-native';
 import {debounce} from 'lodash';
 
-// import {OmnitalkContext} from '../utils/OmnitalkContext';
-import {CALL_TYPE, DEFAULT_ROOM_TYPE} from 'omnitalk-rn-ellie-sdk';
-import {TRACK} from 'omnitalk-rn-ellie-sdk/dist/types/enum';
+import {OmnitalkContext} from '../utils/OmnitalkContext';
+import {CALL_TYPE, DEFAULT_ROOM_TYPE} from 'omnitalk-rn-sdk';
+import {TRACK} from 'omnitalk-rn-sdk/dist/types/enums';
 
 interface CallList {
   // Define your call list item type here
 }
 
-function AudioConference({navigation}: any, {omnitalk}: any) {
-  // const omnitalk = useContext(OmnitalkContext);
+function AudioConference({navigation}: any) {
+  const omnitalk = useContext(OmnitalkContext);
 
   const [session, setSession] = useState('');
   const [roomId, setRoomId] = useState('');

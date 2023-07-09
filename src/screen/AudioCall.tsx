@@ -7,8 +7,8 @@ import {
   View,
 } from 'react-native';
 import {debounce} from 'lodash';
-import {CALL_TYPE} from 'omnitalk-rn-ellie-sdk';
-import {TRACK} from 'omnitalk-rn-ellie-sdk/dist/types/enum';
+import {CALL_TYPE} from 'omnitalk-rn-sdk';
+import {TRACK} from 'omnitalk-rn-sdk/dist/types/enums';
 import {OmnitalkContext} from '../utils/OmnitalkContext';
 
 interface CallList {}
@@ -58,9 +58,10 @@ function AudioCall({navigation}: any) {
         <TouchableOpacity
           style={styles.btn}
           onPress={async () => {
-            await omnitalk
-              ?.createSession()
-              .then((session: any) => setSession(session.session));
+            await omnitalk?.createSession().then((res: any) => {
+              setSession(res.session);
+              setCaller(res.user_id);
+            });
             const device = await omnitalk!.getDeviceList();
 
             console.log(`devices : ${JSON.stringify(device)}`);
@@ -112,7 +113,7 @@ function AudioCall({navigation}: any) {
         <TouchableOpacity
           style={styles.btn}
           onPress={async () => {
-            await omnitalk!.answerCall();
+            await omnitalk?.answerCall();
           }}>
           <Text style={{color: '#fff', fontSize: 20}}>Answer Call</Text>
         </TouchableOpacity>

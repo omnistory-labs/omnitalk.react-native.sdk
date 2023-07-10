@@ -1,6 +1,3 @@
-# omnitalk.react-native.sdk
-# omnitalk.react-native.sdk
-
 <p align="center">
   <img src="https://github.com/Luna-omni/readmdtest/assets/125844802/a910cb80-de3b-44d8-9f37-0ccd08b9dd19" width="500" height="100">
 </p><br/>

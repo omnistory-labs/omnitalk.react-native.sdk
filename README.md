@@ -36,6 +36,7 @@ npm i omnitalk-rn-sdk
 
 옴니톡을 사용하면서 발생하는 이슈나 궁금점은 [issue](https://github.com/omnistory-labs/omnitalk.react-native.sdk/issues) 탭를 이용해 주세요.
 
+<br/>
 
 ## Example Projects
 

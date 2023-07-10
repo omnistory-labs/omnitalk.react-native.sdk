@@ -42,7 +42,7 @@ npm i omnitalk-rn-sdk
 옴니톡 SDK로 구현된 간단한 [기능 테스트 데모](https://github.com/omnistory-labs/omnitalk.react-native.sdk/tree/demo)를 제공합니다.
 
 - 기본 기능 Function Test
-	* create session, room list, create room, join room, publish, subscribe, unsubscribe, destroy room
+	* create session, device list, room list 및 모든 리스트 , create room, join room, publish, subscribe, unsubscribe, destroy room
 - Audio Call
 	* create session, session list, offer call, answer call, audio mute/unmute, make sip number
 - Video Call

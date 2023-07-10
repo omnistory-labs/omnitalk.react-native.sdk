@@ -45,6 +45,7 @@ function VideoCall({navigation}: any) {
           break;
         case 'BROADCASTING_EVENT':
           if (remoteStreamRef?.streamURL.length > 1) {
+            setRemoteStreamRef(remoteStreamRef);
             setRemoteOn(true);
           }
           break;
@@ -105,22 +106,17 @@ function VideoCall({navigation}: any) {
             style={styles.btn}
             onPress={async () => {
               console.log('callee in offercall is... ', callee);
-              console.log(typeof localStreamRef);
 
               await omnitalk!.offerCall(
                 CALL_TYPE.VIDEO_CALL,
                 callee,
-
+                false,
                 localStreamRef,
                 remoteStreamRef,
-                false,
               );
 
               setLocalStreamRef(localStreamRef);
-              setRemoteStreamRef(remoteStreamRef);
               setLocalOn(true);
-
-              console.log(localOn, remoteOn);
             }}>
             <Text style={{color: '#fff', fontSize: 20}}>Offer Call</Text>
           </TouchableOpacity>
@@ -142,7 +138,6 @@ function VideoCall({navigation}: any) {
             setLocalStreamRef(localStreamRef);
             setRemoteStreamRef(remoteStreamRef);
             setLocalOn(true);
-            // setRemoteOn(true);
           }}>
           <Text style={{color: '#fff', fontSize: 20}}>Answer Call</Text>
         </TouchableOpacity>

@@ -14,7 +14,7 @@ const Stack = createNativeStackNavigator();
 
 const App: React.FC = () => {
   // 발급받은 Service id, Service key를 넣으세요.
-  Omnitalk.init('Service id', 'Service key');
+  Omnitalk.sdkInit('Service id', 'Service key');
   const omnitalk = Omnitalk.getInstance();
 
   return (

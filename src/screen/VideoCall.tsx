@@ -170,7 +170,7 @@ function VideoCall({navigation}: any) {
         <TouchableOpacity
           style={styles.btn}
           onPress={async () => {
-            await omnitalk!.leave();
+            await omnitalk!.leave(session);
 
             navigation.navigate('Home');
           }}>

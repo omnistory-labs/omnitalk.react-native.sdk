@@ -29,7 +29,7 @@ function AudioConference({navigation}: any) {
   const [callList, setCallList] = useState<CallList[]>([]);
   const [callee, setCallee] = useState('');
   const [caller, setCaller] = useState('');
-  const [sipNumber, setSipNumber] = useState(931234);
+  const [sipNumber, setSipNumber] = useState('');
 
   // const handleSipCall = debounce(res => {
   //   setSipNumber(res);
@@ -191,7 +191,7 @@ function AudioConference({navigation}: any) {
           <TouchableOpacity
             style={styles.btn}
             onPress={async () => {
-              await omnitalk!.leave();
+              await omnitalk!.leave(session);
 
               navigation.navigate('Home');
             }}>

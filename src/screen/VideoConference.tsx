@@ -131,7 +131,7 @@ function VideoConference({navigation}: any) {
               style={styles.btn}
               onPress={async () => {
                 console.log(`session1 : ${session}`);
-                await omnitalk!.leave(session);
+                await omnitalk!.leave();
                 console.log(`session2 : ${session}`);
                 navigation.navigate('Home');
               }}>
@@ -148,7 +148,7 @@ function VideoConference({navigation}: any) {
                 onPress={async () => {
                   // leave(sessionIdRef.current, roomId);
                   console.log(`session1 : ${session}`);
-                  await omnitalk!.leave(session);
+                  await omnitalk!.leave();
 
                   navigation.navigate('Home');
                 }}>

@@ -180,7 +180,7 @@ function ChattingRoom({navigation}: any) {
         <TouchableOpacity
           style={styles.btn}
           onPress={async () => {
-            await omnitalk!.leave(session);
+            await omnitalk!.leave();
 
             navigation.navigate('Home');
           }}>

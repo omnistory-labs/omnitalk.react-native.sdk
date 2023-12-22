@@ -383,7 +383,7 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
-  - react-native-webrtc (111.0.1):
+  - react-native-webrtc (111.0.6):
     - JitsiWebRTC (~> 111.0.0)
     - React-Core
   - React-NativeModulesApple (0.72.0):
@@ -722,7 +722,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 8d754fc957255a29d93e52fc67a895045cdc8703
   React-logger: 454ffb01980778a43b0153ee98721d0275b56616
   react-native-safe-area-context: 36cc67648134e89465663b8172336a19eeda493d
-  react-native-webrtc: 2702afae1e59882b423e6077768ca0d1e6fc42ed
+  react-native-webrtc: 255a1172fd31525b952b36aef7b8e9a41de325e5
   React-NativeModulesApple: 038cd625999ff352fc13d11fd335ea7509794599
   React-perflogger: 684a11499a0589cc42135d6d5cc04d0e4e0e261a
   React-RCTActionSheet: 00b0a4c382a13b834124fa3f541a7d8d1d56efb9
@@ -748,4 +748,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 64f7078b3826f91ae3c3a761685baf7eacfa4cac
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.14.2

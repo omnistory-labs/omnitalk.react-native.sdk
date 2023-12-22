@@ -17,7 +17,7 @@
     "@types/lodash": "^4.14.195",
     "events": "^3.3.0",
     "lodash": "^4.17.21",
-    "omnitalk-rn-sdk": "2.0.4",
+    "omnitalk-rn-sdk": "2.1.1",
     "pod-install": "0.1.38",
     "react": "18.2.0",
     "react-native": "0.72.0",
